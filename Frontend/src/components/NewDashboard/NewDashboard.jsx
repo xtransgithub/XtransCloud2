@@ -25,7 +25,7 @@ const ChannelDashboard = () => {
     useEffect(() => {
         const fetchChannelData = async () => {
             try {
-                const fieldResponse = await axios.get(`http://localhost:4001/api/channels/${id}/entries/read`);
+                const fieldResponse = await axios.get(`https://xtrans-cloud2.vercel.app/api/channels/${id}/entries/read`);
                 if (!fieldResponse.data.entries || fieldResponse.data.entries.length === 0) {
                     console.error('No entries found for this channel');
                     return;
@@ -80,7 +80,7 @@ const ChannelDashboard = () => {
     // New function to fetch channels and find by ID
     const getChannelById = async () => {
         try {
-            const response = await axios.get('http://localhost:4001/api/auth/channels', {
+            const response = await axios.get('https://xtrans-cloud2.vercel.app/api/auth/channels', {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -156,7 +156,7 @@ const ChannelDashboard = () => {
         if (newField.trim()) {
             try {
                 const response = await axios.patch(
-                    `http://localhost:4001/api/channels/${id}/add-fields`,
+                    `https://xtrans-cloud2.vercel.app/api/channels/${id}/add-fields`,
                     { fields: [newField] },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -175,7 +175,7 @@ const ChannelDashboard = () => {
         if (fieldToRemove.trim()) {
             try {
                 const response = await axios.patch(
-                    `http://localhost:4001/api/channels/${id}/remove-fields`,
+                    `https://xtrans-cloud2.vercel.app/api/channels/${id}/remove-fields`,
                     { fields: [fieldToRemove] },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
