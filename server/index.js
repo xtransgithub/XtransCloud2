@@ -101,6 +101,12 @@ app.use((err, req, res, next)=>{
     })
 })
 
+app.use(cors({
+  origin: 'https://xtrans-cloud.vercel.app',  
+  methods: ['GET', 'POST', 'OPTIONS'],      
+  allowedHeaders: ['Content-Type']          
+}));
+
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)
 })
