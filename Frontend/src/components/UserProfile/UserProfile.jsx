@@ -14,6 +14,8 @@ const UserProfile = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
+  // const server = "http://localhost:4001/";
+  const server = "https://xtrans-cloud2.vercel.app/";
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -25,7 +27,7 @@ const UserProfile = () => {
       }
 
       try {
-        const response = await axios.get('https://xtrans-cloud2.vercel.app/api/auth/me', {
+        const response = await axios.get(`${server}api/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -59,7 +61,7 @@ const UserProfile = () => {
 
     try {
       const response = await axios.patch(
-        'http://localhost:4001/api/auth/me',
+        `${server}api/auth/me`,
         { firstName, lastName },
         {
           headers: {

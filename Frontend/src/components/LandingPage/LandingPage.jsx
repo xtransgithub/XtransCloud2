@@ -13,6 +13,8 @@ const LandingPage = () => {
   const [showChannelCards, setShowChannelCards] = useState(false); // To toggle between default cards and channel cards
   const [showCreateChannelForm, setShowCreateChannelForm] = useState(false);
 
+  // const server = "http://localhost:4001/";
+  const server = "https://xtrans-cloud2.vercel.app/";
 
   // Fetch channels on component mount
   useEffect(() => {
@@ -23,7 +25,7 @@ const LandingPage = () => {
         return;
       }
       try {
-        const response = await axios.get('https://xtrans-cloud2.vercel.app/api/auth/channels', {
+        const response = await axios.get(`${server}api/auth/channels`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setChannels(response.data.channels); // Assuming the response contains a 'channels' array

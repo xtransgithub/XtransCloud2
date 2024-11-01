@@ -61,6 +61,7 @@
     transition: transform 0.3s ease;
     max-width: 350px;  /* Ensure responsive sizing */
     width: 100%;
+    max-height: fit-content;
   }
   
   .chart:hover {

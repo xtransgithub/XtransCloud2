@@ -6,7 +6,6 @@ import FieldDisplay from './FieldDisplay';
 import './NewDashboard.css';
 import Navbar from '../Navbar/Navbar';
 import { useParams } from 'react-router-dom';
-// import SecondaryNavbar from '../SecondaryNavbar/SecondaryNavbar';
 
 const ChannelDashboard = () => {
     const [channelData, setChannelData] = useState({});
@@ -21,16 +20,18 @@ const ChannelDashboard = () => {
     const { id } = useParams();  // Get the channel ID from the route
 
     const token = localStorage.getItem('token');
+    // const server = "http://localhost:4001/";
+    const server = "https://xtrans-cloud2.vercel.app/";
 
     useEffect(() => {
         const fetchChannelData = async () => {
             try {
-                const fieldResponse = await axios.get(`https://xtrans-cloud2.vercel.app/api/channels/${id}/entries/read`);
-                if (!fieldResponse.data.entries || fieldResponse.data.entries.length === 0) {
-                    console.error('No entries found for this channel');
-                    return;
-                }
-                console.log(fieldResponse);
+                const fieldResponse = await axios.get(`${server}api/channels/${id}/entries/read`);
+                // if (!fieldResponse.data.entries || fieldResponse.data.entries.length === 0) {
+                //     console.error('No entries found for this channel');
+                //     return;
+                // }
+                // console.log(fieldResponse);
 
                 const allFields = new Set();
                 fieldResponse.data.entries.forEach(entry => {
@@ -80,7 +81,7 @@ const ChannelDashboard = () => {
     // New function to fetch channels and find by ID
     const getChannelById = async () => {
         try {
-            const response = await axios.get('https://xtrans-cloud2.vercel.app/api/auth/channels', {
+            const response = await axios.get(`${server}api/auth/channels`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -89,7 +90,7 @@ const ChannelDashboard = () => {
             
             // Find the specific channel by ID
             const matchedChannel = allChannels.find(channel => channel._id === id);
-            console.log(matchedChannel);
+            // console.log(matchedChannel);
             
             // Update state with the found channel
             if (matchedChannel) {
@@ -112,6 +113,32 @@ const ChannelDashboard = () => {
 
     console.log(currentChannel);
 
+    const getCSV = async () => {
+        try {
+            const response = await axios.get(
+                `${server}api/csv/channels/${id}/fields/csv`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    responseType: 'blob', // Important to handle the binary data
+                }
+            );
+
+            // Create a URL for the blob object returned by the API
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `channel_${id}_fields.csv`); // Set the filename
+            document.body.appendChild(link);
+            link.click(); // Trigger the download
+            link.remove(); // Clean up the DOM
+
+        } catch (error) {
+            console.error('Error downloading CSV:', error);
+        }
+    };
+
     const toggleEdit = () => {
         setIsEditing(!isEditing);
         // Set initial values when opening the modal
@@ -122,7 +149,7 @@ const ChannelDashboard = () => {
     const handleChannelUpdate = async () => {
         try {
             const response = await axios.patch(
-                `http://localhost:4001/api/auth/channels/${id}`,
+                `${server}api/auth/channels/${id}`,
                 { name: updatedChannelName },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -133,49 +160,62 @@ const ChannelDashboard = () => {
         }
     };
 
-    const handleFieldUpdate = async () => {
-        const confirmUpdate = window.confirm('Are you sure you want to update the field names?');
-        if (confirmUpdate) {
-            try {
-                const updatedFieldData = updatedFields.map(({ oldName, newName }) => ({ oldName, newName }));
-                const response = await axios.patch(
-                    `http://localhost:4001/api/channels/${id}/fields`,
-                    { fields: updatedFieldData },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-                setChannelData(prevData => ({ ...prevData, fields: response.data.channel.fields }));
-                setIsEditing(false);
-                window.location.reload();
-            } catch (error) {
-                console.error('Error updating field names:', error);
-            }
-        }
-    };
+    const fieldPattern = /^[a-z0-9]+$/;
 
-    const handleAddField = async () => {
-        if (newField.trim()) {
-            try {
-                const response = await axios.patch(
-                    `https://xtrans-cloud2.vercel.app/api/channels/${id}/add-fields`,
-                    { fields: [newField] },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-                setChannelData(prevData => ({ ...prevData, fields: response.data.channel.fields }));
-                setNewField('');
-                window.location.reload();
-            } catch (error) {
-                console.error('Error adding new field:', error);
-            }
-        } else {
-            alert('Please enter a valid field name.');
+const handleAddField = async () => {
+    if (newField.trim()) {
+        if (!fieldPattern.test(newField)) {
+            alert('Field name can only contain lowercase letters and numbers.');
+            return;
         }
-    };
+        
+        try {
+            const response = await axios.patch(
+                `${server}api/channels/${id}/add-fields`,
+                { fields: [newField] },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setChannelData(prevData => ({ ...prevData, fields: response.data.channel.fields }));
+            setNewField('');
+            window.location.reload();
+        } catch (error) {
+            console.error('Error adding new field:', error);
+        }
+    } else {
+        alert('Please enter a valid field name.');
+    }
+};
+
+const handleFieldUpdate = async () => {
+    const confirmUpdate = window.confirm('Are you sure you want to update the field names?');
+    if (confirmUpdate) {
+        const invalidField = updatedFields.find(({ newName }) => !fieldPattern.test(newName));
+        if (invalidField) {
+            alert('Field names can only contain lowercase letters and numbers.');
+            return;
+        }
+
+        try {
+            const updatedFieldData = updatedFields.map(({ oldName, newName }) => ({ oldName, newName }));
+            const response = await axios.patch(
+                `${server}api/channels/${id}/fields`,
+                { fields: updatedFieldData },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setChannelData(prevData => ({ ...prevData, fields: response.data.channel.fields }));
+            setIsEditing(false);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error updating field names:', error);
+        }
+    }
+};
 
     const handleRemoveField = async () => {
         if (fieldToRemove.trim()) {
             try {
                 const response = await axios.patch(
-                    `https://xtrans-cloud2.vercel.app/api/channels/${id}/remove-fields`,
+                    `${server}api/channels/${id}/remove-fields`,
                     { fields: [fieldToRemove] },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -220,6 +260,106 @@ const ChannelDashboard = () => {
                         <h2>No Data Available</h2>
                         <p>This channel currently has no entries. Please add data to view the charts.</p>
                     </div>
+                    {/* <div className='dashboard-body'> */}
+                    <div className="card currentCh">
+                        <div className="card-header">
+                            <strong>{currentChannel.currentChannelname}</strong>
+                        </div>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item"><strong>Description:</strong> {currentChannel.currentChannelDesc}</li>
+                            <li className="list-group-item"><strong>Channel ID:</strong> {currentChannel.currentChannelId}</li>
+                            <li className="list-group-item"><strong>User ID:</strong> {currentChannel.currentChannelUserId}</li>
+                            <li className="list-group-item"><strong>Fields:</strong> {JSON.stringify(currentChannel.currentChannelFields)}</li>
+                        </ul>
+                        {/* <div className='card-footer'>
+                            <button className="btn btn-secondary" onClick={getCSV}>
+                                Get CSV
+                            </button>
+                        </div> */}
+                        <div className='card-footer'>
+                            <button className="btn btn-secondary" onClick={toggleEdit}>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                    {isEditing && (
+                        <>
+                            {/* Modal Backdrop */}
+                            <div className="modal-backdrop" onClick={() => setIsEditing(false)}></div>
+
+                            {/* Modal Content */}
+                            <div className="edit-modal">
+                                <h2>Edit Channel Details</h2>
+
+                                {/* Channel Name Edit */}
+                                <div className="edit-section">
+                                    <label>Channel Name:</label>
+                                    <input
+                                        type="text"
+                                        value={updatedChannelName}
+                                        onChange={(e) => setUpdatedChannelName(e.target.value)}
+                                    />
+                                    <button className="btn btn-primary" onClick={handleChannelUpdate}>
+                                        Save Channel Name
+                                    </button>
+                                </div>
+
+                                {/* Field Update */}
+                                <div className="edit-section">
+                                    <h3>Update Field Names</h3>
+                                    {updatedFields.map(({ oldName, newName }, index) => (
+                                        <div className="field-edit-row" key={index}>
+                                            <label>{oldName}</label>
+                                            <input
+                                                type="text"
+                                                value={newName}
+                                                onChange={(e) => {
+                                                    const newFields = [...updatedFields];
+                                                    newFields[index].newName = e.target.value;
+                                                    setUpdatedFields(newFields);
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                    <button className="btn btn-primary" onClick={handleFieldUpdate}>
+                                        Save Field Names
+                                    </button>
+                                </div>
+
+                                {/* Add New Field */}
+                                <div className="edit-section">
+                                    <h3>Add New Field</h3>
+                                    <input
+                                        type="text"
+                                        value={newField}
+                                        onChange={(e) => setNewField(e.target.value)}
+                                        placeholder="Enter new field name"
+                                    />
+                                    <button className="btn btn-primary" onClick={handleAddField}>
+                                        Add Field
+                                    </button>
+                                </div>
+
+                                {/* Remove Field */}
+                                <div className="edit-section">
+                                    <h3>Remove Field</h3>
+                                    <input
+                                        type="text"
+                                        value={fieldToRemove}
+                                        onChange={(e) => setFieldToRemove(e.target.value)}
+                                        placeholder="Enter field name to remove"
+                                    />
+                                    <button className="btn btn-danger" onClick={handleRemoveField}>
+                                        Remove Field
+                                    </button>
+                                </div>
+
+                                <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </>
         );
@@ -245,7 +385,13 @@ const ChannelDashboard = () => {
                             <li className="list-group-item"><strong>Description:</strong> {currentChannel.currentChannelDesc}</li>
                             <li className="list-group-item"><strong>Channel ID:</strong> {currentChannel.currentChannelId}</li>
                             <li className="list-group-item"><strong>User ID:</strong> {currentChannel.currentChannelUserId}</li>
+                            <li className="list-group-item"><strong>Fields:</strong> {JSON.stringify(currentChannel.currentChannelFields)}</li>
                         </ul>
+                        <div className='card-footer'>
+                            <button className="btn btn-secondary" onClick={getCSV}>
+                                Get CSV
+                            </button>
+                        </div>
                         <div className='card-footer'>
                             <button className="btn btn-secondary" onClick={toggleEdit}>
                                 Edit

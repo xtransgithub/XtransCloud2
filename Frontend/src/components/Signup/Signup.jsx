@@ -9,14 +9,19 @@ import AlertModal from '../Alert/Alert';
 
 function SignUp() {
   const [responseMessage, setResponseMessage] = useState('');
+  // const server = "http://localhost:4001/";
   const server = "https://xtrans-cloud2.vercel.app/";
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
 
   // Yup validation schema for the new user schema
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
+    firstName: Yup.string()
+      .matches(/^\S+$/, 'First Name cannot contain spaces') // no spaces allowed
+      .required('First Name is required'),
+    lastName: Yup.string()
+      .matches(/^\S+$/, 'Last Name cannot contain spaces') // no spaces allowed
+      .required('Last Name is required'),
     email: Yup.string().email('Invalid email format').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     confirmPassword: Yup.string()

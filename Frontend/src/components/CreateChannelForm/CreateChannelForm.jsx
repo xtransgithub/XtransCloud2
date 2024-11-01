@@ -10,13 +10,20 @@ const CreateChannelForm = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
+    // const server = "http://localhost:4001/";
     const server = "https://xtrans-cloud2.vercel.app/";
 
     // Validation schema using Yup
     const validationSchema = Yup.object({
         name: Yup.string().required('Channel name is required'),
         description: Yup.string().required('Description is required'),
-        fields: Yup.array().of(Yup.string().required('Field name is required')).min(1, 'At least one field is required'),
+        fields: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Field name is required')
+                    .matches(/^[a-z0-9]+$/, 'Field name can only contain lowercase letters and numbers')
+            )
+            .min(1, 'At least one field is required'),
     });
 
     // Submit handler
