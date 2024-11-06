@@ -1,0 +1,64 @@
+/* General container for the sign-up page */
+.signup-page{
+  display: flex;
+}
+.image-container{
+  padding-top: 20%;
+}
+
+.sign-up-container {
+    background: #fff; /* Keep the card background white */
+    border-radius: 15px; /* Increase the border-radius for a softer look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow for more depth */
+    padding: 2rem; /* Padding inside the card */
+    width: 35%; /* Adjust width for a slightly wider form */
+    margin: 4rem auto; /* Margin to center and space from top */
+    text-align: center; /* Center align text in the card */
+  }
+  
+  .sign-up-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0e2433;
+  }
+  
+  .sign-up-form-group {
+    margin-bottom: 1.25rem;
+    text-align: left;
+  }
+  
+  .sign-up-form-group label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: #0e2433;
+  }
+  
+  .sign-up-form-group input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 5px;
+    border: 1px solid #ccd;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  
+  .sign-up-btn-primary {
+    background: #2D2DA6; /* Adjust color for buttons */
+    color: #fff;
+    border: none;
+    padding: 0.8rem; /* Slightly more padding for buttons */
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem; /* Font size adjustment */
+    margin-bottom: 1rem; /* Margin between buttons */
+  }
+  
+  .sign-up-btn-primary:hover {
+    background-color: #292998;
+  }
+  
+
+  
