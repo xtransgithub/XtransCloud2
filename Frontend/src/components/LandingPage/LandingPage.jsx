@@ -13,8 +13,8 @@ const LandingPage = () => {
   const [showChannelCards, setShowChannelCards] = useState(false); // To toggle between default cards and channel cards
   const [showCreateChannelForm, setShowCreateChannelForm] = useState(false);
 
-  const server = "http://localhost:4001/";
-  // const server = "https://xtrans-cloud2.vercel.app/";
+  // const server = "http://localhost:4001/";
+  const server = "https://xtrans-cloud2.vercel.app/";
 
   // Fetch channels on component mount
   useEffect(() => {
