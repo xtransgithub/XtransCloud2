@@ -10,8 +10,8 @@ const CreateChannelForm = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
-    const server = "http://localhost:4001/";
-    // const server = "https://xtrans-cloud2.vercel.app/";
+    // const server = "http://localhost:4001/";
+    const server = "https://xtrans-cloud2.vercel.app/";
 
     // Validation schema using Yup
     const validationSchema = Yup.object({
