@@ -20,8 +20,8 @@ const ChannelDashboard = () => {
     const { id } = useParams();  // Get the channel ID from the route
 
     const token = localStorage.getItem('token');
-    const server = "http://localhost:4001/";
-    // const server = "https://xtrans-cloud2.vercel.app/";
+    // const server = "http://localhost:4001/";
+    const server = "https://xtrans-cloud2.vercel.app/";
 
     useEffect(() => {
         const fetchChannelData = async () => {
