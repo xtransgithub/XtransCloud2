@@ -10,8 +10,8 @@ import Images from '../../assets';
 
 function SignUp() {
   const [responseMessage, setResponseMessage] = useState('');
-  const server = "http://localhost:4001/";
-  // const server = "https://xtrans-cloud2.vercel.app/";
+  // const server = "http://localhost:4001/";
+  const server = "https://xtrans-cloud2.vercel.app/";
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
 
