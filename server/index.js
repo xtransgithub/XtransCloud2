@@ -15,7 +15,8 @@ const {v4: uuidv4} = require('uuid')
 const app = express()
 const port = 4001
 
-app.use(cors())
+
+app.use(cors(origin: 'https://xtrans-cloud.vercel.app'));
 app.use(express.json())
 
 app.use('/api/auth', authRouter)
@@ -105,11 +106,7 @@ app.use((err, req, res, next)=>{
     })
 })
 
-app.use(cors({
-  origin: 'https://xtrans-cloud.vercel.app',  
-  methods: ['GET', 'POST', 'OPTIONS'],      
-  allowedHeaders: ['Content-Type']          
-}));
+
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)
