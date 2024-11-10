@@ -17,6 +17,7 @@ const LandingPage = () => {
   const server = "https://xtrans-cloud2.vercel.app/";
 
   // Fetch channels on component mount
+  const token = localStorage.getItem('token');
   useEffect(() => {
     const fetchChannels = async () => {
       const token = localStorage.getItem('token'); // Get token from local storage
@@ -52,6 +53,20 @@ const LandingPage = () => {
     backdrops.forEach((backdrop) => {
       backdrop.style.display = 'none'; // Set display of each backdrop to none
     });
+  };
+  const handleDeleteChannel = async (channelId) => {
+    const token = localStorage.getItem('token'); // Get token from local storage
+    try {
+      const response = await axios.delete(`${server}api/auth/channels/${channelId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Filter out the deleted channel from the channels array
+      setChannels(channels.filter(channel => channel._id !== channelId));
+      console.log(response.data.message);
+    } catch (error) {
+      console.error('Error deleting channel:', error);
+      setError('An error occurred while deleting the channel.');
+    }
   };
 
   // Default cards before showing channels
@@ -116,6 +131,20 @@ const LandingPage = () => {
                 >
                   Go to Channel
                 </a>
+                <a
+                  href={'/landing'}
+                  className="card-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if(window.confirm('Delete Channel')){
+                      handleDeleteChannel(channel._id);
+                    }
+                    
+                  }}
+                >
+                  Delete Channel
+                </a>
+                
               </div>
             </div>
           </div>
