@@ -85,15 +85,15 @@ app.get('/', (req,res)=>{
     res.send('<h1>This is my server home</h1>')
 })
 
+//mongoose
+  //  .connect('mongodb://127.0.0.1:27017/authentication')
+    //.then(()=> console.log('Connected to mongodb'))
+    //.catch((error)=>console.error('Failed to connect : ', error))
+
 mongoose
-    .connect('mongodb://127.0.0.1:27017/authentication')
+    .connect(process.env.MONGO_URI)
     .then(()=> console.log('Connected to mongodb'))
     .catch((error)=>console.error('Failed to connect : ', error))
-
-// mongoose
-//     .connect(process.env.MONGO_URI)
-//     .then(()=> console.log('Connected to mongodb'))
-//     .catch((error)=>console.error('Failed to connect : ', error))
 
 app.use((err, req, res, next)=>{
     err.statuCode = err.statuCode || 500
@@ -104,6 +104,12 @@ app.use((err, req, res, next)=>{
         message : err.message
     })
 })
+
+app.use(cors({
+  origin: 'https://xtrans-cloud.vercel.app',  
+  methods: ['GET', 'POST', 'OPTIONS'],      
+  allowedHeaders: ['Content-Type']          
+}));
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)
