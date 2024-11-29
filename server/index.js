@@ -103,10 +103,9 @@ app.use((err, req, res, next)=>{
 })
 
 app.use(cors({
-    origin: 'https://xtrans-cloud.vercel.app', 
-    methods: ['GET', 'POST', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-    credentials: true  
+    origin: 'https://xtrans-cloud.vercel.app', // Replace with allowed origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
 }));
 
 app.options('*', cors());
