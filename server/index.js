@@ -102,12 +102,18 @@ app.use((err, req, res, next)=>{
     })
 })
 
-app.use(cors({
-    origin: 'https://xtrans-cloud.vercel.app', 
-    methods: ['GET', 'POST', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-    credentials: true  
-}));
+const corsOptions = {
+    origin: 'https://xtrans-cloud.vercel.app', // Allow only your specific origin
+    methods: 'GET,POST,OPTIONS',              // Allow specific methods
+    allowedHeaders: 'Content-Type,Authorization', // Allow necessary headers
+};
+
+app.use(cors(corsOptions));
+
+// Define routes
+app.post('/api/auth/signup', (req, res) => {
+    res.json({ message: 'Signup successful!' });
+});
 
 app.options('*', cors());
 app.listen(port,()=>{
