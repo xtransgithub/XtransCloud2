@@ -1,0 +1,93 @@
+.sign-in-container {
+  background: #fff; /* Keep the card background white */
+  border-radius: 15px; /* Increase the border-radius for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow for more depth */
+  padding: 2rem; /* Padding inside the card */
+  width: 340px; /* Adjust width for a slightly wider form */
+  margin: 4rem auto; /* Margin to center and space from top */
+  text-align: center; /* Center align text in the card */
+}
+
+/* Header */
+.sign-in-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem; /* Slightly smaller font size */
+  font-weight: 700; /* Bold for the header */
+  color: #0e2433; /* Darker color for header text */
+}
+
+/* Form group styling */
+.sign-in-form .sign-in-form-group {
+  margin-bottom: 1.25rem; /* Increase space between form elements */
+  text-align: left; /* Align labels and inputs to the left */
+}
+
+/* Labels */
+.sign-in-form label {
+  display: block;
+  margin-bottom: 0.3rem; /* Reduce space below label */
+  font-size: 1rem;
+  color: #0e2433;
+}
+
+/* Input fields */
+.sign-in-form input {
+  width: 100%;
+  padding: 0.6rem; /* Slightly less padding for inputs */
+  border: 1px solid #ccd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem; /* Increase input font size */
+}
+
+/* Primary button styling */
+.sign-in-btn-primary {
+  background: #2D2DA6; /* Adjust color for buttons */
+  color: #fff;
+  border: none;
+  padding: 0.8rem; /* Slightly more padding for buttons */
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.1rem; /* Font size adjustment */
+  margin-bottom: 1rem; /* Margin between buttons */
+}
+
+.sign-in-btn-primary:hover {
+  background: #062b4d; /* Darker shade on hover */
+}
+
+/* Forgot password and sign-up links */
+.sign-in-forgot-password-link,
+.sign-in-sign-up-link {
+  color: #0e2433;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.sign-in-forgot-password-link:hover,
+.sign-in-sign-up-link:hover {
+  text-decoration: underline;
+}
+
+/* Additional styling for the sign-up button */
+.sign-in-sign-up-btn {
+  background: #2D2DA6; /* Consistent button color */
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.sign-in-sign-up-btn:hover {
+  background: #292998;
+}
+
+/* Body background gradient */
+/* body {
+  background: linear-gradient(to right, #085cbd, #175a51);
+  height: 100vh;
+} */
