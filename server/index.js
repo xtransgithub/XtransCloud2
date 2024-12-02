@@ -88,7 +88,7 @@ app.get('/', (req,res)=>{
 
 
 mongoose
-    .connect(process.env.MONGO_URI)
+    .connect('mongodb+srv://xtrans:xtranscloud@cluster0.8rn7t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(()=> console.log('Connected to mongodb'))
     .catch((error)=>console.error('Failed to connect : ', error))
 
