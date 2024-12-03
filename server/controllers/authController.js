@@ -80,7 +80,7 @@ exports.signup = async (req, res, next) => {
             }
         })
 
-        const verificationLink = `http://localhost:4001/verify?uuid=${newUser.uuid}`;
+        const verificationLink = `http://xtrans-cloud.vercel.app/verify?uuid=${newUser.uuid}`;
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: newUser.email,
