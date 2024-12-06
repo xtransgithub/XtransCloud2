@@ -8,18 +8,47 @@ const { google } = require('googleapis');
 require('dotenv').config();
 
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        type: 'OAuth2',
-        user: process.env.USER_EMAIL,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken: process.env.REFRESH_TOKEN,
-        accessToken: process.env.ACCESS_TOKEN
+const oauth2Client = new google.auth.OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    'https://developers.google.com/oauthplayground' // Redirect URI
+);
+
+oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN,
+});
+
+// Function to get a new access token
+async function getNewAccessToken() {
+    try {
+        const { token } = await oauth2Client.getAccessToken();
+        return token;
+    } catch (error) {
+        console.error('Error refreshing access token:', error.message);
+        throw new Error('Could not refresh access token');
+    }
+}
+
+
+
+const createTransporter = async () => {
+    const accessToken = await getNewAccessToken();
+
+    return nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            type: 'OAuth2',
+            user: process.env.USER_EMAIL,
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            refreshToken: process.env.REFRESH_TOKEN,
+            accessToken, // Use refreshed access token
+        },
     });
+};
+
 
 exports.signup = async (req, res, next) => {
     try {
